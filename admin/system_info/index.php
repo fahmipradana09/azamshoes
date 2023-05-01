@@ -19,7 +19,7 @@
 	}
 </style>
 <div class="col-lg-12">
-	<div class="card card-outline rounded-0 card-maroon">
+	<div class="card card-outline rounded-0 card-blue">
 		<div class="card-header">
 			<h5 class="card-title">System Information</h5>
 			<!-- <div class="card-tools">
@@ -56,7 +56,7 @@
 		<div class="card-footer">
 			<div class="col-md-12">
 				<div class="row">
-					<button class="btn btn-sm btn-default bg-maroon" form="system-frm">Update</button>
+					<button class="btn btn-sm btn-default bg-blue" form="system-frm">Update</button>
 				</div>
 			</div>
 		</div>

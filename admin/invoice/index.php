@@ -3,11 +3,11 @@
 	alert_toast("<?php echo $_settings->flashdata('success') ?>",'success')
 </script>
 <?php endif;?>
-<div class="card card-outline rounded-0 card-maroon">
+<div class="card card-outline rounded-0 card-blue">
 	<div class="card-header">
 		<h3 class="card-title">List of Invoices</h3>
 		<div class="card-tools">
-			<a href="./?page=invoice/manage" class="btn btn-flat btn-default bg-maroon"><span class="fas fa-plus"></span>  Create New</a>
+			<a href="./?page=invoice/manage" class="btn btn-flat btn-default bg-blue"><span class="fas fa-plus"></span>  Create New</a>
 		</div>
 	</div>
 	<div class="card-body">
