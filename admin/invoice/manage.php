@@ -21,6 +21,7 @@ if($type == 1)
 else
 	$items = $conn->query("SELECT i.*,s.description,s.id as `sid`,s.`service` as `name`,s.category_id as cid FROM invoices_items i inner join service_list s on s.id = i.form_id where i.invoice_id = '{$id}' ");
 while($row=$items->fetch_assoc()):
+	//ubah tabel category jadi brand
 	$category = $conn->query("SELECT * FROM `category_list` where id = {$row['cid']}");
 	$cat_count = $category->num_rows;
 	$res = $cat_count > 0 ? $category->fetch_assoc(): array();
@@ -35,7 +36,7 @@ endwhile;
 	padding:5px 3px!important;
 }
 </style>
-<div class="card card-outline rounded-0 card-maroon">
+<div class="card card-outline rounded-0 card-blue">
 	<div class="card-header">
 	<h3 class="card-title"><?php echo !isset($_GET['id']) ? "New Invoice" :"Edit Invoice" ?></h3>
 	</div>
@@ -53,7 +54,7 @@ endwhile;
 					<div class="col-md-6">
 						<div class="form-group">
 								<label for="customer_name" class="control-label">Customer Name</label>
-								<textarea name="customer_name" id="customer_name" cols="30" rows="2" class="form-control form no-resize"><?php echo isset($customer_name) ? $customer_name : ''; ?></textarea>
+								<textarea name="customer_name" id="customer_name" cols="30" rows="1" class="form-control form no-resize"><?php echo isset($customer_name) ? $customer_name : ''; ?></textarea>
 							</div>
 					</div>
 
@@ -61,11 +62,13 @@ endwhile;
 				<hr>
 				<h4>Item Form:</h4>
 				<div class="row align-items-end">
-					<div class="col-md-3">
+					<div class="col-md-2">
 						<div class="form-group">
-						<label for="category_id" class="control-label">Category</label>
-							<select id="category_id" class="custom-select custom-select-sm select select2">
+						<label for="brand_id" class="control-label">Brand</label>
+							<select id="brand_id" class="custom-select custom-select-sm select select2">
+							<option selected="" disabled>Select Brand First</option>
 								<?php 
+								//ganti querry jadi brand
 									$i = 0;
 									$qry = $conn->query("SELECT * FROM category_list where `type` = {$type} ");
 									while($row = $qry->fetch_assoc()):
@@ -76,46 +79,52 @@ endwhile;
 							</select>
 						</div>
 					</div>
-					<div class="col-md-3">	
+					<div class="col-md-4">	
 						<div class="form-group">
-						<label for="form_id" class="control-label">Product/Service</label>
-							<select  id="form_id" class="custom-select custom-select-sm select2">
-								<option selected="" disabled>Select Category First</option>
+						<label for="jenis_id" class="control-label">Jenis</label>
+							<select  id="jenis_id" class="custom-select custom-select-sm select2">
+								<option selected="" disabled>Select Jenis First</option>
 								<?php 
-								$data_json = array();
-									if($type == 1):
-										$qry2 = $conn->query("SELECT * FROM product_list ");
-									else:
-										$qry2 = $conn->query("SELECT * FROM service_list ");
-									endif;
-									while($row = $qry2->fetch_assoc()):
-										$name = ($type == 1) ? $row['product'] : $row['service'];
-										$row['description'] = stripslashes(html_entity_decode($row['description']));
-										$row['name'] = $name;
-										$data_json[$row['id']] = $row;
+								//ganti query jadi jenis
+									$i = 0;
+									$qry = $conn->query("SELECT * FROM category_list where `type` = {$type} ");
+									while($row = $qry->fetch_assoc()):
+									$i++;
 								?>
 								<!-- <option value="<?php echo $row['id'] ?>" ><?php echo $name ?></option> -->
 								<?php endwhile; ?>
 							</select>
-							<small id="price"></small>
 						</div>
 					</div>
-					<div class="col-md-2">
-						<div class="form-group">
-							<label for="unit" class="control-label">Unit</label>
-							<input type="text" id="unit"  class="form-control">
+					<div class="col-md-4">
+					<div class="form-group">
+						<label for="variant_id" class="control-label">Variant</label>
+							<select  id="variant_id" class="custom-select custom-select-sm select2">
+								<option selected="" disabled>Select Variant First</option>
+								<?php 
+								//ganti query jadi variant
+									$i = 0;
+									$qry = $conn->query("SELECT * FROM category_list where `type` = {$type} ");
+									while($row = $qry->fetch_assoc()):
+									$i++;
+								?>
+								<!-- <option value="<?php echo $row['id'] ?>" ><?php echo $name ?></option> -->
+								<?php endwhile; ?>
+							</select>
+							<!-- <small id="price"></small> -->
 						</div>
 					</div>
-					<div class="col-md-2">
+					<div class="col-md-1">
 						<div class="form-group">
 							<label for="qty" class="control-label">QTY</label>
 							<input type="number" min='1' id="qty"  class="form-control text-right">
 						</div>
 					</div>
-					<div class="col-md-2 pb-1">
+					  <div class="col-md-1">
 						<div class="form-group">
-							<button class="btn btn-flat btn-default bg-maroon" type="button" id="add_item"><i class="fa fa-plus"></i> Add</button>
+							<button class="btn btn-flat btn-default bg-blue btn-full" type="button" id="add_item"><i class="fa fa-plus"></i> Add</button>
 						</div>
+					  </div>
 					</div>
 				</div>
 				<div class="row">
@@ -127,14 +136,16 @@ endwhile;
 								<col width="30%">
 								<col width="15%">
 								<col width="15%">
+								<col width="5%">
 							</colgroup>
 							<thead>
 								<tr>
 									<th class="text-center">QTY</th>
-									<th class="text-center">UNIT</th>
+									<th class="text-center">variant</th>
 									<th class="text-center">Product</th>
 									<th class="text-center">Cost</th>
 									<th class="text-center">Total</th>
+									<th class="text-center"></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -174,7 +185,7 @@ endwhile;
 			</form>
 		</div>
 		<div class="card-footer">
-				<button class="btn btn-flat btn-sm btn-default bg-maroon" form="invoice-form">Save</button>
+				<button class="btn btn-flat btn-sm btn-default bg-blue" form="invoice-form">Save</button>
 				<a class="btn btn-flat btn-sm btn-default" href="./?page=invoice">Cancel</a>
 		</div>
 	</div>
@@ -225,13 +236,13 @@ var item_arr = $.parseJSON('<?php echo json_encode($item_arr) ?>');
 		calc_total()
 	}
 	function add_item($obj = null){
-		var tr, td, item_id='', qty='', unit='',form_name,form_id='',price,total, description, category;
+		var tr, td, item_id='', qty='', variant='',form_name,form_id='',price,total, description, category;
 		if($obj == null){
 		start_loader();
 			var prod_d = $.parseJSON('<?php echo json_encode($data_json) ?>')
 				prod_d = prod_d[$('#form_id').val()]
 			qty = $('#qty').val();
-			unit = $('#unit').val();
+			variant = $('#variant').val();
 			form_id = $('#form_id').val();
 			category = $('#category_id option:selected').text();
 			price = parseFloat(prod_d.price)
@@ -241,7 +252,7 @@ var item_arr = $.parseJSON('<?php echo json_encode($item_arr) ?>');
 		}else{
 			item_id = $obj.id
 			qty = $obj.quantity;
-			unit = $obj.unit;
+			variant = $obj.variant;
 			form_id = $obj.form_id;
 			category = $obj.cat_name;
 			price = parseFloat($obj.price)
@@ -263,14 +274,14 @@ var item_arr = $.parseJSON('<?php echo json_encode($item_arr) ?>');
 			td.append("<input type='hidden' name='item_id[]' value='"+item_id+"' />") //item id input
 			td.append("<input type='hidden' name='form_id[]' value='"+form_id+"' />") //item product/service input
 			td.append("<input type='hidden' name='quantity[]' value='"+qty+"' />") //item quantity input
-			td.append("<input type='hidden' name='unit[]' value='"+unit+"' />") //item unit input
+			td.append("<input type='hidden' name='variant[]' value='"+variant+"' />") //item variant input
 			td.append("<input type='hidden' name='price[]' value='"+price+"' />") //item price input
 			td.append("<input type='hidden' name='total[]' value='"+total+"' />") //item total input
 			tr.append(td)
-		// unit column
+		// variant column
 			td = $("<td>")
 			td.addClass('text-center')
-			td.text(unit)
+			td.text(variant)
 			tr.append(td)
 		// details column
 			td = $("<td>")
@@ -295,7 +306,7 @@ var item_arr = $.parseJSON('<?php echo json_encode($item_arr) ?>');
 			tr.append(td)
 		$('#item-list tbody').append(tr)
 		$('#qty').val('').trigger('change')
-		$('#unit').val('').trigger('change')
+		$('#variant').val('').trigger('change')
 		$('#form_id').val('').trigger('change')
 		calc_total()
 		if($obj == null)
@@ -318,7 +329,7 @@ var item_arr = $.parseJSON('<?php echo json_encode($item_arr) ?>');
 			location.href = "./?page=invoice/manage&type="+$(this).val()
 		})
 		$('#add_item').click(function(){
-			if($('#qty').val() == '' ||$('#unit').val() == '' || $('#form_id').val() == ''){
+			if($('#qty').val() == '' ||$('#variant').val() == '' || $('#form_id').val() == ''){
 				alert_toast("Please complete the Item form first.",'warning')
 				return false;
 			}

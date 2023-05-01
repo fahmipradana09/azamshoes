@@ -1,6 +1,6 @@
 </style>
 <!-- Main Sidebar Container -->
-      <aside class="main-sidebar sidebar-light-maroon elevation-4 sidebar-no-expand">
+      <aside class="main-sidebar sidebar-light-blue elevation-4 sidebar-no-expand">
         <!-- Brand Logo -->
         <a href="<?php echo base_url ?>admin" class="brand-link bg-blue text-sm">
         <img src="<?php echo validate_image($_settings->info('logo'))?>" alt="Store Logo" class="brand-image img-circle elevation-3" style="opacity: .8;
@@ -45,7 +45,7 @@
                       </a>
                     </li>
                     <li class="nav-item dropdown">
-                      <a href="<?php echo base_url ?>admin/?page=invoice/manage" class="nav-link">
+                      <a href="<?php echo base_url ?>admin/?page=invoice/manage" class="nav-link nav-invoice-manage">
                         <i class="nav-icon fas fa-plus"></i>
                         <p>
                           Transaction
@@ -54,26 +54,10 @@
                     </li>
                     <li class="nav-header">Master List</li>
                     <li class="nav-item dropdown">
-                      <a href="<?php echo base_url ?>admin/?page=category" class="nav-link nav-category">
-                        <i class="nav-icon fas fa-th-list"></i>
-                        <p>
-                          Category List
-                        </p>
-                      </a>
-                    </li>
-                    <li class="nav-item dropdown">
                       <a href="<?php echo base_url ?>admin/?page=product" class="nav-link nav-product">
                         <i class="nav-icon fas fa-box"></i>
                         <p>
                           Product List
-                        </p>
-                      </a>
-                    </li>
-                    <li class="nav-item dropdown">
-                      <a href="<?php echo base_url ?>admin/?page=service" class="nav-link nav-service">
-                        <i class="nav-icon fas fa-hands-helping"></i>
-                        <p>
-                          Service List
                         </p>
                       </a>
                     </li>
@@ -110,8 +94,8 @@
     $(document).ready(function(){
       var page = '<?php echo isset($_GET['page']) ? $_GET['page'] : 'home' ?>';
       var s = '<?php echo isset($_GET['s']) ? $_GET['s'] : '' ?>';
-      page = page.split('/');
-      page = page[0];
+      page = page.split('/').join('-');
+      // page = page[0];  
       if(s!='')
         page = page+'_'+s;
 

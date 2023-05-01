@@ -150,3 +150,7 @@ label.star:before {
     content: '\2605';
     font-family: FontAwesome
 }
+
+.btn-full{
+  width: 100%;
+}
