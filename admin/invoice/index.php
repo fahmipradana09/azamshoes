@@ -39,6 +39,7 @@
 						while($row = $qry->fetch_assoc()):
                             $row['remarks'] = strip_tags(stripslashes(html_entity_decode($row['remarks'])));
 							$items = $conn->query("SELECT * FROM invoices_items where invoice_id = {$row['id']} ")->num_rows;
+							// $brand = $conn->query("SELECT *br")
 					?>
 						<tr>
 							<td class="text-center"><?php echo $i++; ?></td>
@@ -46,9 +47,10 @@
 							<td><?php echo $row['invoice_code'] ?></td>
 							<td><?php echo $row['customer_name'] ?></td>
 							<td>
-								<p class="m-0"><small><b>Invoice Type:</b><?php echo $row['type'] == 1 ? "Product":"Service" ?></small></p>
-								<p class="m-0"><small><b>Item Count:</b> <?php echo number_format($items) ?></small></p>
-								<p class="m-0"><small><b>Total Amount:</b><?php echo number_format($row['total_amount']) ?></small></p>
+								<p class="m-0"><small><b>Brand: </b><?php echo "nike" ?></small></p>
+								<p class="m-0"><small><b>Variant: </b><?php echo "sendal jempit" ?></small></p>
+								<p class="m-0"><small><b>Item Count: </b> <?php echo number_format($items) ?></small></p>
+								<p class="m-0"><small><b>Total Amount: </b><?php echo number_format($row['total_amount']) ?></small></p>
 							</td>
 							<td align="center">
 								 <button type="button" class="btn btn-flat btn-default btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown">

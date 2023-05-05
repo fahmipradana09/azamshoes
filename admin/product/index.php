@@ -6,9 +6,6 @@
 <div class="card card-outline rounded-0 card-blue">
 	<div class="card-header">
 		<h3 class="card-title">List of Products</h3>
-		<div class="card-tools">
-			<a href="javascript:void(0)" id="create_product" class="btn btn-flat btn-default bg-blue"><span class="fas fa-plus"></span>  Create New</a>
-		</div>
 	</div>
 	<div class="card-body">
 		<div class="container-fluid">
@@ -16,37 +13,33 @@
 			<table class="table table-bordered table-stripped">
 				<colgroup>
 					<col width="5%">
-					<col width="13%">
-					<col width="17%">
-					<col width="10%">
-					<col width="30%">
-					<col width="10%">
+					<col width="20%">
+					<col width="20%">
+					<col width="20%">
+					<col width="20%">
 					<col width="15%">
 				</colgroup>
 				<thead>
 					<tr>
-						<th>#</th>
-						<th>Date Created</th>
-						<th>Category</th>
-						<th>Name</th>
-						<th>Description</th>
+						<th>no.</th>
+						<th>Brand</th>
+						<th>Jenis</th>
+						<th>Variant</th>
 						<th>Price</th>
 						<th>Action</th>
-					</tr>
+					</tr>	
 				</thead>
-				<tbody>
+				<tbody>	
 					<?php 
 					$i = 1;
-						$qry = $conn->query("SELECT p.*,c.name as cname from `product_list` p inner join category_list c on c.id = p.category_id order by date(p.date_created) desc ");
+						$qry = $conn->query("SELECT v.name as variantName, t.name as typeName, b.name as brandName, v.price as price FROM variant_list v JOIN type_list t on v.id = t.id JOIN brand_list b on t.id = b.id");
 						while($row = $qry->fetch_assoc()):
-                            $row['description'] = strip_tags(stripslashes(html_entity_decode($row['description'])));
 					?>
 						<tr>
 							<td class="text-center"><?php echo $i++; ?></td>
-							<td><?php echo date("Y-m-d H:i",strtotime($row['date_created'])) ?></td>
-							<td><?php echo $row['cname'] ?></td>
-							<td><?php echo $row['product'] ?></td>
-							<td ><p class="truncate-1 m-0"><?php echo $row['description'] ?></p></td>
+							<td><?php echo $row['brandName'] ?></td>
+							<td><?php echo $row['typeName'] ?></td>
+							<td><?php echo $row['variantName'] ?></td>
 							<td class="text-right"><?php echo number_format($row['price'],2) ?></td>
 							<td align="center">
 								 <button type="button" class="btn btn-flat btn-default btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown">
@@ -69,9 +62,6 @@
 </div>
 <script>
 	$(document).ready(function(){
-		$('#create_product').click(function(){
-			uni_modal("<i class='fa fa-plus'></i> New Product","product/manage.php","mid-large")
-		})
 		$('.edit_data').click(function(){
 			uni_modal("<i class='fa fa-edit'></i> Update Product","product/manage.php?id="+$(this).attr('data-id'),"mid-large")
 		})
